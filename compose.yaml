@@ -1,6 +1,22 @@
 
 services:
-###> doctrine/doctrine-bundle ###
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - ./:/var/www/project/:cached
+    ports:
+      - 10302:80
+    networks:
+      - symfony
+
+  php:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-php
+      restart: on-failure
+
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
