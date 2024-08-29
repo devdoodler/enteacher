@@ -17,6 +17,6 @@ class AddController extends AbstractController
     {
         $messageBus->dispatch($addWord);
 
-        return new Response('', Response::HTTP_ACCEPTED);
+        return new Response('', Response::HTTP_CREATED);
     }
 }

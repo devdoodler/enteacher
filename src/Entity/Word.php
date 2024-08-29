@@ -7,9 +7,12 @@ use App\Repository\WordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WordRepository::class)]
+#[UniqueEntity(fields: ['name', 'dialect'])]
 #[Index(columns: ["name"])]
+
 class Word
 {
     #[ORM\Id]
