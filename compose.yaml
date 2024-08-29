@@ -26,6 +26,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     volumes:
       - database_data:/var/lib/postgresql/data:rw
+    container_name: enteacher-database
     ports:
       - 5432:5432
     networks:
