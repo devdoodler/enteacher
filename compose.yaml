@@ -20,6 +20,19 @@ services:
     networks:
       - symfony
 
+  consumer:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-php
+    volumes:
+      - ./:/var/www/project/:cached
+    restart: always
+    depends_on:
+      - database
+    command: sh -c 'sleep 1 && php bin/console messenger:consume async -vv'
+    networks:
+      - symfony
+
   database:
     image: postgres:${POSTGRES_VERSION:-16}
     environment:

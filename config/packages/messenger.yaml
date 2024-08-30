@@ -14,4 +14,4 @@ framework:
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-           #'App\Cqrs\Command': async
+           'App\Cqrs\Command': async
