@@ -9,7 +9,6 @@ use App\Mappers\WordMapper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use function PHPUnit\Framework\throwException;
 
 /**
  * @extends ServiceEntityRepository<Word>
