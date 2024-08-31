@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\DialectEnum;
 use App\Repository\WordRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -31,6 +33,17 @@ class Word
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $pronunciation = null;
+
+    /**
+     * @var Collection<int, Pronunciation>
+     */
+    #[ORM\OneToMany(targetEntity: Pronunciation::class, mappedBy: 'word', orphanRemoval: true)]
+    private Collection $pronunciations;
+
+    public function __construct()
+    {
+        $this->pronunciations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +94,36 @@ class Word
     public function setPronunciation(?string $pronunciation): static
     {
         $this->pronunciation = $pronunciation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pronunciation>
+     */
+    public function getPronunciations(): Collection
+    {
+        return $this->pronunciations;
+    }
+
+    public function addPronunciation(Pronunciation $pronunciation): static
+    {
+        if (!$this->pronunciations->contains($pronunciation)) {
+            $this->pronunciations->add($pronunciation);
+            $pronunciation->setWord($this);
+        }
+
+        return $this;
+    }
+
+    public function removePronunciation(Pronunciation $pronunciation): static
+    {
+        if ($this->pronunciations->removeElement($pronunciation)) {
+            // set the owning side to null (unless already changed)
+            if ($pronunciation->getWord() === $this) {
+                $pronunciation->setWord(null);
+            }
+        }
 
         return $this;
     }
