@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Cqrs\Command\Pronunciation\AddPronunciation;
 use App\Entity\Pronunciation;
+use App\Mappers\PronunciationMapper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,33 +14,24 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PronunciationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly PronunciationMapper $pronunciationMapper,
+        private readonly WordRepository $wordRepository
+    ) {
         parent::__construct($registry, Pronunciation::class);
     }
 
-//    /**
-//     * @return Pronunciation[] Returns an array of Pronunciation objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function add(AddPronunciation $addPronunciation): Pronunciation
+    {
+        $entity = new Pronunciation();
+        $entity = $this->pronunciationMapper->mapDtoToEntity($addPronunciation, $entity);
+        $this->wordRepository->find($addPronunciation->wordId)->addPronunciation($entity);
 
-//    public function findOneBySomeField($value): ?Pronunciation
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        return $entity;
+    }
 }
