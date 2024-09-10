@@ -6,6 +6,7 @@ use App\Entity\Pronunciation;
 use App\Enum\DialectEnum;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 readonly class PronunciationMapper
@@ -32,8 +33,19 @@ readonly class PronunciationMapper
 
     public function mapEntityToJson(Pronunciation $entity): string
     {
-        return $this->serializer->serialize(
+        $normalized = $this->serializer->normalize(
             $entity,
+            null,
+            [
+                ObjectNormalizer::CIRCULAR_REFERENCE_HANDLER =>
+                    function ($object) {
+                        return $object->getId();
+                    }
+            ]
+        );
+
+        return $this->serializer->serialize(
+            $normalized,
             JsonEncoder::FORMAT,
             [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
         );
