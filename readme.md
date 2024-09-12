@@ -6,3 +6,24 @@
 
 ## Terminal
 1. You can get to terminal in docker by: `docker-compose exec -u 1000 fpm bash`
+
+## HTTP Request
+
+#### POST {{url}}/word
+body:
+{
+  "name": "chips",
+  "dialect": "general",
+  "explanation": "a long thin piece of potato fried in oil or fat",
+  "pronunciation": "/tʃɪp/"
+}
+
+#### GET {{url}}/word/{id}
+#### PUT {{url}}/word/{id}
+body:
+{
+"name": "chips",
+"dialect": "general",
+"explanation": "a long thin piece of potato fried in oil or fat",
+"pronunciation": "/tʃɪp/"
+}

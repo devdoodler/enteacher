@@ -15,3 +15,20 @@ framework:
 
         routing:
            'App\Cqrs\Command': async
+
+when@test:
+    framework:
+        messenger:
+            default_bus: command.bus
+
+            buses:
+                command.bus:
+                    middleware:
+                        - doctrine_transaction
+                query.bus: ~
+
+            transports:
+                sync: 'sync://'
+                async: 'test://'
+            routing:
+                'App\Cqrs\Command': async
