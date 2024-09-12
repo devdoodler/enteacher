@@ -290,5 +290,26 @@
     },
     "twig/extra-bundle": {
         "version": "v3.11.0"
+    },
+    "zenstruck/foundry": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.10",
+            "ref": "37c2f894cc098ab4c08874b80cccc8e2f8de7976"
+        },
+        "files": [
+            "config/packages/zenstruck_foundry.yaml"
+        ]
+    },
+    "zenstruck/messenger-test": {
+        "version": "1.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.7",
+            "ref": "e0d2a904cd584d15bcbb4c4a011549840bc01daf"
+        }
     }
 }

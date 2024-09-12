@@ -7,12 +7,14 @@ use App\Entity\Word;
 use App\Enum\DialectEnum;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 readonly class WordMapper
 {
     public function __construct(
-        private SerializerInterface $serializer
+        private SerializerInterface $serializer,
+        private NormalizerInterface $normalizer
     ) { }
 
     public function mapDtoToEntity(AddWord|EditWord $command, Word $entity): Word
@@ -38,6 +40,25 @@ readonly class WordMapper
     {
         return $this->serializer->serialize(
             $wordEntity,
+            JsonEncoder::FORMAT,
+            [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
+        );
+    }
+
+
+    public function mapBulkEntityToJson(array $wordEntityArray): string
+    {
+        $normalizedWordEntity = [];
+        foreach ($wordEntityArray as $wordEntity) {
+            $normalizedWordEntity[] = $this->normalizer->normalize(
+                $wordEntity,
+                JsonEncoder::FORMAT,
+                [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
+            );
+        }
+
+        return $this->serializer->serialize(
+            $normalizedWordEntity,
             JsonEncoder::FORMAT,
             [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
         );
