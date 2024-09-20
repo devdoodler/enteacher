@@ -23,7 +23,8 @@ class AddTest extends WebTestCase
             "dialect" => "general",
             "explanation" => "a long thin piece of potato fried in oil or fat",
             "pronunciation" => "/tʃɪp/",
-            "id" => 1
+            "id" => 1,
+            "pronunciations" => []
         ];
 
         $client = static::createClient();

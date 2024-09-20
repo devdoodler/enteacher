@@ -57,6 +57,5 @@ class WordRepository extends ServiceEntityRepository
         }
         $this->entityManager->remove($wordEntity);
         $this->entityManager->flush();
-
     }
 }
