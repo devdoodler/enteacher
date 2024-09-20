@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Application\Controller\Word;
+namespace App\Tests\Application\Controller\Pronunciation;
 
 use App\Entity\Pronunciation;
 use App\Entity\Word;

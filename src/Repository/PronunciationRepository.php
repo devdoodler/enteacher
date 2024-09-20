@@ -34,4 +34,14 @@ class PronunciationRepository extends ServiceEntityRepository
 
         return $entity;
     }
+
+    public function remove(int $id): void
+    {
+        $entity = $this->find($id);
+        if ($entity === null) {
+            throw new \Exception('Pronunciation not found');
+        }
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
 }

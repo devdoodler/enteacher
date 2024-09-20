@@ -8,6 +8,7 @@ use App\Enum\DialectEnum;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 readonly class WordMapper
@@ -36,15 +37,25 @@ readonly class WordMapper
         return $entity;
     }
 
-    public function mapEntityToJson(Word $wordEntity): string
+    public function mapEntityToJson(Word $entity): string
     {
+        $normalized = $this->serializer->normalize(
+            $entity,
+            null,
+            [
+                ObjectNormalizer::CIRCULAR_REFERENCE_HANDLER =>
+                    function ($object) {
+                        return $object->getId();
+                    }
+            ]
+        );
+
         return $this->serializer->serialize(
-            $wordEntity,
+            $normalized,
             JsonEncoder::FORMAT,
             [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
         );
     }
-
 
     public function mapBulkEntityToJson(array $wordEntityArray): string
     {
@@ -53,7 +64,13 @@ readonly class WordMapper
             $normalizedWordEntity[] = $this->normalizer->normalize(
                 $wordEntity,
                 JsonEncoder::FORMAT,
-                [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]
+                [
+                    ObjectNormalizer::CIRCULAR_REFERENCE_HANDLER =>
+                    function ($object) {
+                        return $object->getId();
+                    },
+                    JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+                ]
             );
         }
 

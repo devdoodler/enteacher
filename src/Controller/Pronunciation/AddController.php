@@ -4,6 +4,7 @@ namespace App\Controller\Pronunciation;
 
 use App\Cqrs\Command\Pronunciation\AddPronunciation;
 use App\Cqrs\CommandBus;
+use App\Service\FileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -19,22 +20,17 @@ class AddController extends AbstractController
     public function __invoke(
         #[MapRequestPayload] AddPronunciation $addPronunciation,
         Request $request,
-        SluggerInterface $slugger,
         CommandBus $messageBus,
+        FileService $fileService,
         #[Autowire('%kernel.project_dir%/public/uploads/voice')] string $voiceDir
     ): Response
     {
         $file = $request->files->getIterator()['voice'];
-        if ($file) {
-            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFileName = $slugger->slug($originalName) . uniqid() . '.' . $file->guessExtension();
-            try {
-                $file->move($voiceDir, $newFileName);
-            } catch (FileException $e) {
-            }
-        }
 
-        if (isset($newFileName)) {
+        if ($file) {
+            $newFileName = $fileService->addFile($file, $voiceDir);
+        }
+        if (isset($newFileName) && $newFileName) {
             $addPronunciation->setPath($newFileName);
         }
 
