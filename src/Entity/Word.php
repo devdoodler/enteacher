@@ -12,7 +12,10 @@ use Doctrine\ORM\Mapping\Index;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WordRepository::class)]
-#[UniqueEntity(fields: ['name', 'dialect'])]
+#[ORM\UniqueConstraint(
+    name: 'word_name_dialect_unique_idx',
+    columns: ['name', 'dialect']
+)]
 #[Index(columns: ["name"])]
 
 class Word
