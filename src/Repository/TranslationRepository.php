@@ -20,6 +20,7 @@ class TranslationRepository extends ServiceEntityRepository
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslationMapper $translationMapper,
         private readonly WordRepository $wordRepository,
+        private readonly WordTranslationRepository $wordTranslationRepository
     )
     {
         parent::__construct($registry, Translation::class);
@@ -42,29 +43,19 @@ class TranslationRepository extends ServiceEntityRepository
         return $entity;
     }
 
-
-    //    /**
-    //     * @return Translation[] Returns an array of Translation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Translation
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function remove(int $id): void
+    {
+        $translationEntity = $this->find($id);
+        if ($translationEntity === null) {
+            throw new \Exception('Word not found');
+        }
+        $wordTranslations = $this->wordTranslationRepository->findBy([
+            'Translation' => $translationEntity->getId(),
+        ]);
+        foreach ($wordTranslations as $wordTranslation) {
+            $this->entityManager->remove($wordTranslation);
+        }
+        $this->entityManager->remove($translationEntity);
+        $this->entityManager->flush();
+    }
 }
