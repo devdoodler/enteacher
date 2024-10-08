@@ -7,6 +7,10 @@ use App\Repository\PronunciationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PronunciationRepository::class)]
+#[ORM\UniqueConstraint(
+    name: 'pronunciation_word_dialect_source_unique_idx',
+    columns: ['word_id', 'dialect', 'source']
+)]
 class Pronunciation
 {
     #[ORM\Id]
