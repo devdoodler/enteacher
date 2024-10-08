@@ -39,10 +39,10 @@ class AddTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseStatusCodeSame(201);
 
-        $this->transport('async')->queue()->assertCount(1);
-        $this->transport('async')->process(1);
-        $this->transport('async')->queue()->assertCount(0);
-
+//        $this->transport('async')->queue()->assertCount(1);
+//        $this->transport('async')->process(1);
+//        $this->transport('async')->queue()->assertCount(0);
+//
         $client->request(
             'GET',
             '/word/1',

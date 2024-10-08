@@ -47,7 +47,7 @@ class TranslationRepository extends ServiceEntityRepository
     {
         $translationEntity = $this->find($id);
         if ($translationEntity === null) {
-            throw new \Exception('Word not found');
+            throw new \Exception('Translation not found');
         }
         $wordTranslations = $this->wordTranslationRepository->findBy([
             'Translation' => $translationEntity->getId(),

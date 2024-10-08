@@ -14,7 +14,7 @@ framework:
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-           'App\Cqrs\Command': async
+ #          'App\Cqrs\Command': async
 
 when@test:
     framework:
@@ -31,4 +31,4 @@ when@test:
                 sync: 'sync://'
                 async: 'test://'
             routing:
-                'App\Cqrs\Command': async
+#                'App\Cqrs\Command': async
